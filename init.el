@@ -7,22 +7,25 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 (defvar my-package-list
-  '(company cmake-mode web-mode js2-mode json-mode yaml-mode dockerfile-mode)
+  '(company cmake-mode markdown-mode web-mode
+    js2-mode json-mode yaml-mode dockerfile-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
       '((company . "melpa")
         (cmake-mode . "melpa")
+        (markdown-mode . "melpa")
         (web-mode . "melpa")
         (js2-mode . "melpa")
         (json-mode . "melpa")
         (yaml-mode . "melpa")
         (dockerfile-mode . "melpa")))
 
-(unless package-archive-contents (package-refresh-contents))
+;(unless package-archive-contents (package-refresh-contents))
 (dolist (pkg my-package-list)
   (unless (package-installed-p pkg)
-    (package-install pkg)
+    (unless package-archive-contents (package-refresh-contents))
+      (package-install pkg)
   )
 )
 
