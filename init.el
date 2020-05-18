@@ -7,27 +7,30 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 (defvar my-package-list
-  '(company cmake-mode markdown-mode web-mode
-    js2-mode json-mode yaml-mode dockerfile-mode)
+  '(multi-term company cmake-mode ini-mode markdown-mode web-mode
+    js2-mode json-mode python-mode yaml-mode dockerfile-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
-      '((company . "melpa")
+      '((multi-term . "melpa")
+        (company . "melpa")
         (cmake-mode . "melpa")
+        (ini-mode . "melpa")
         (markdown-mode . "melpa")
         (web-mode . "melpa")
         (js2-mode . "melpa")
         (json-mode . "melpa")
+        (python-mode . "melpa")
         (yaml-mode . "melpa")
         (dockerfile-mode . "melpa")))
 
-;(unless package-archive-contents (package-refresh-contents))
-(dolist (pkg my-package-list)
-  (unless (package-installed-p pkg)
-    (unless package-archive-contents (package-refresh-contents))
-      (package-install pkg)
-  )
-)
+(let ((package-refreshed nil))
+  (dolist (pkg my-package-list)
+    (unless (package-installed-p pkg)
+      (when (null package-refreshed)
+        (package-refresh-contents)
+        (setq package-refreshed t))
+      (package-install pkg))))
 
 ;;;;; Character code
 (prefer-coding-system 'utf-8)
@@ -79,7 +82,7 @@
 (electric-pair-mode t) ;Close bracket automatically
 (set-face-attribute 'show-paren-match nil :background "#5d5d5d")
 
-;;;;; C, C++ mode
+;;;;; C, C++
 (add-to-list 'auto-mode-alist '("\\.cu?\\'" . c++-mode))
 (add-hook
   'c-mode-common-hook
@@ -95,7 +98,11 @@
   )
 )
 
-;;;;; Tex mode
+;;;;; Python
+(add-to-list 'auto-mode-alist '("\\.py?\\'" . python-mode))
+
+
+;;;;; Tex
 (setq auto-mode-alist
   (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
@@ -150,6 +157,11 @@
 (add-to-list 'auto-mode-alist '("\\.yaml?\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yml?\\'" . yaml-mode))
 
+;;;;; INI
+(load "ini-mode")
+(add-to-list 'auto-mode-alist '("\\.ini?\\'" . ini-mode))
+(add-to-list 'auto-mode-alist '("\\.in?\\'" . ini-mode))
+
 ;;;;; Dockerfile
 (load "dockerfile-mode")
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))
@@ -161,6 +173,10 @@
     (define-key term-raw-map "\M-y" 'yank-pop)
     (define-key term-raw-map "\M-w" 'kill-ring-save)))
 
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+
+;;;;; The follows are automatically generated.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
