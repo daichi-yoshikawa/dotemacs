@@ -7,11 +7,12 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 (defvar my-package-list
-  '(web-mode js2-mode json-mode yaml-mode dockerfile-mode)
+  '(company web-mode js2-mode json-mode yaml-mode dockerfile-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
-      '((web-mode . "melpa")
+      '((company . "melpa")
+        (web-mode . "melpa")
         (js2-mode . "melpa")
         (json-mode . "melpa")
         (yaml-mode . "melpa")
@@ -31,6 +32,7 @@
 ;;;;; Basic config
 (load-theme 'misterioso t)
 (column-number-mode t)
+(tool-bar-mode 0)
 (menu-bar-mode 0)
 (setq make-backup-files nil)
 (setq auto-save-default nil) 
@@ -38,6 +40,24 @@
 (set-locale-environment nil) ;Don't use location-dependent setting
 (define-key global-map (kbd "C-M-n") 'next-multiframe-window)
 (define-key global-map (kbd "C-M-p") 'previous-multiframe-window)
+(define-key global-map (kbd "\C-x\C-o") 'next-multiframe-window)
+(define-key global-map (kbd "\C-x\C-p") 'previous-multiframe-window)
+(define-key global-map (kbd "\C-xp") 'previous-multiframe-window)
+
+;;;;; Auto-completion
+(require 'company)
+(global-company-mode)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 3)
+(setq company-selection-wrap-around t)
+(global-set-key (kbd "C-M-i") 'company-complete)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-search-map (kbd "C-n") 'company-select-next)
+(define-key company-search-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-s") 'company-filter-candidates)
+(define-key company-active-map (kbd "C-M-i") 'company-complete-selection)
+(define-key company-active-map [tab] 'company-complete-selection)
 
 ;;;;; Tab and whitespace
 (setq-default indent-tabs-mode nil)
