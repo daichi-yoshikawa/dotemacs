@@ -129,6 +129,13 @@
 (load "dockerfile-mode")
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))
 
+;;;;; Terminal
+(add-hook 'term-mode-hook
+  (lambda ()
+    (term-set-escape-char ?\C-x)
+    (define-key term-raw-map "\M-y" 'yank-pop)
+    (define-key term-raw-map "\M-w" 'kill-ring-save)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
