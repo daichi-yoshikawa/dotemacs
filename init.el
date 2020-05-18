@@ -51,6 +51,7 @@
 (define-key global-map (kbd "\C-x\C-o") 'next-multiframe-window)
 (define-key global-map (kbd "\C-x\C-p") 'previous-multiframe-window)
 (define-key global-map (kbd "\C-xp") 'previous-multiframe-window)
+(define-key global-map (kbd "C-i") 'scroll-down-command)
 
 ;;;;; Auto-completion
 (require 'company)
@@ -100,7 +101,6 @@
 
 ;;;;; Python
 (add-to-list 'auto-mode-alist '("\\.py?\\'" . python-mode))
-
 
 ;;;;; Tex
 (setq auto-mode-alist
