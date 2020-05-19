@@ -1,5 +1,5 @@
 ;;;;; Install packages
-11;rgb:3030/0a0a/2424(package-initialize)
+(package-initialize)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
