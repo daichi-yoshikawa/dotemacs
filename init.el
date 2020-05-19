@@ -8,7 +8,7 @@
 
 (defvar my-package-list
   '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
-    markdown-mode multi-term smooth-scroll undo-tree volatile-highlights
+    markdown-mode multi-term undo-tree volatile-highlights
     web-mode yaml-mode)
   "packages to be installed")
 (require 'package)
@@ -22,7 +22,6 @@
         (json-mode . "melpa")
         (markdown-mode . "melpa")
         (multi-term . "melpa")
-        (smooth-scroll . "melpa")
         (undo-tree . "gnu")
         (volatile-highlights . "melpa")
         (web-mode . "melpa")
@@ -61,8 +60,6 @@
 
 (require 'anzu)
 (global-anzu-mode t)
-(require 'smooth-scroll)
-(smooth-scroll-mode t)
 (require 'undo-tree)
 (global-undo-tree-mode t)
 (global-set-key (kbd "M-/") 'undo-tree-redo)
@@ -185,7 +182,8 @@
 
 (add-hook 'term-mode-hook
   (lambda ()
-    (term-set-escape-char ?\C-x)
+    (term-set-escape-char ?\C-t)
+    (define-key term-raw-map "\C-t" 'next-multiframe-window)
     (define-key term-raw-map "\M-y" 'yank-pop)
     (define-key term-raw-map "\M-w" 'kill-ring-save)))
 
