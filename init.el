@@ -1,5 +1,5 @@
 ;;;;; Install packages
-(package-initialize)
+11;rgb:3030/0a0a/2424(package-initialize)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
@@ -7,22 +7,26 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 (defvar my-package-list
-  '(multi-term company cmake-mode ini-mode markdown-mode web-mode
-    js2-mode json-mode python-mode yaml-mode dockerfile-mode)
+  '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
+    markdown-mode multi-term smooth-scroll undo-tree volatile-highlights
+    web-mode yaml-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
-      '((multi-term . "melpa")
+      '((anzu . "melpa")
         (company . "melpa")
         (cmake-mode . "melpa")
+        (dockerfile-mode . "melpa")
         (ini-mode . "melpa")
-        (markdown-mode . "melpa")
-        (web-mode . "melpa")
         (js2-mode . "melpa")
         (json-mode . "melpa")
-        (python-mode . "melpa")
-        (yaml-mode . "melpa")
-        (dockerfile-mode . "melpa")))
+        (markdown-mode . "melpa")
+        (multi-term . "melpa")
+        (smooth-scroll . "melpa")
+        (undo-tree . "gnu")
+        (volatile-highlights . "melpa")
+        (web-mode . "melpa")
+        (yaml-mode . "melpa")))
 
 (let ((package-refreshed nil))
   (dolist (pkg my-package-list)
@@ -46,12 +50,24 @@
 (setq auto-save-default nil) 
 (setq history-length 1024)
 (set-locale-environment nil) ;Don't use location-dependent setting
-(define-key global-map (kbd "C-M-n") 'next-multiframe-window)
-(define-key global-map (kbd "C-M-p") 'previous-multiframe-window)
-(define-key global-map (kbd "\C-x\C-o") 'next-multiframe-window)
-(define-key global-map (kbd "\C-x\C-p") 'previous-multiframe-window)
-(define-key global-map (kbd "\C-xp") 'previous-multiframe-window)
+
+(defun other-window-or-split ()
+  (interactive)
+  (when (one-window-p)
+    (split-window-horizontally))
+  (other-window 1))
+(define-key global-map (kbd "C-t") 'other-window-or-split)
 (define-key global-map (kbd "C-i") 'scroll-down-command)
+
+(require 'anzu)
+(global-anzu-mode t)
+(require 'smooth-scroll)
+(smooth-scroll-mode t)
+(require 'undo-tree)
+(global-undo-tree-mode t)
+(global-set-key (kbd "M-/") 'undo-tree-redo)
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
 
 ;;;;; Auto-completion
 (require 'company)
@@ -98,9 +114,6 @@
     (define-key c-mode-base-map "\C-m" 'newline-and-indent)
   )
 )
-
-;;;;; Python
-(add-to-list 'auto-mode-alist '("\\.py?\\'" . python-mode))
 
 ;;;;; Tex
 (setq auto-mode-alist
@@ -167,14 +180,14 @@
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))
 
 ;;;;; Terminal
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+
 (add-hook 'term-mode-hook
   (lambda ()
     (term-set-escape-char ?\C-x)
     (define-key term-raw-map "\M-y" 'yank-pop)
     (define-key term-raw-map "\M-w" 'kill-ring-save)))
-
-(require 'multi-term)
-(setq multi-term-program "/bin/bash")
 
 ;;;;; The follows are automatically generated.
 (custom-set-variables
