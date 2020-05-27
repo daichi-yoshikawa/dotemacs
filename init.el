@@ -8,7 +8,7 @@
 
 (defvar my-package-list
   '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
-    markdown-mode multi-term undo-tree volatile-highlights
+    markdown-mode multi-term neotree simple-httpd undo-tree volatile-highlights
     web-mode yaml-mode)
   "packages to be installed")
 (require 'package)
@@ -22,6 +22,8 @@
         (json-mode . "melpa")
         (markdown-mode . "melpa")
         (multi-term . "melpa")
+        (neotree . "melpa")
+        (simple-httpd . "melpa")
         (undo-tree . "gnu")
         (volatile-highlights . "melpa")
         (web-mode . "melpa")
@@ -96,6 +98,12 @@
 (electric-pair-mode t) ;Close bracket automatically
 (set-face-attribute 'show-paren-match nil :background "#5d5d5d")
 
+;;;;; Directory tree
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-show-hidden-files t)
+(setq neo-smart-open t)
+
 ;;;;; C, C++
 (add-to-list 'auto-mode-alist '("\\.cu?\\'" . c++-mode))
 (add-hook
@@ -125,6 +133,16 @@
     (setq dvi2-command "open -a Preview")))
 (add-hook 'yatex-mode-hook '(lambda () (setq auto-fill-function nil)))
 
+;;;;; Web server
+;; Usage :
+;; 1. M-x customize-option
+;; 2. Customize variable: httpd-root
+;; 3. Set path to desired root dir.
+;; 4. M-x httpd-start
+;; 5. M-x httpd-stop
+(require 'simple-httpd)
+(setq httpd-port 8080)
+
 ;;;;; HTML, CSS
 ;; M-x package-list-packages
 ;; package-install
@@ -132,8 +150,6 @@
 ;; If need to support template, M-x -> web-mode-set-engine -> jinja2
 (load "web-mode")
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode))
 
 (defun my-web-mode-hook ()
   "Hooks for web mode."
@@ -143,8 +159,8 @@
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-paring t)
   (setq web-mode-enable-auto-closing t)
-  (setq web-mode-enable-css-colorization t)
-  ;(when '("\\.html?") (web-mode-set-engine "jinja2"))
+  ;(setq web-mode-enable-css-colorization t)
+  (when '("\\.html?") (web-mode-set-engine "jinja2"))
   (set-face-attribute 'web-mode-comment-face nil :foreground "#6d6d6d")
   (set-face-attribute 'web-mode-doctype-face nil :foreground "Blue")
   (set-face-attribute 'web-mode-html-tag-face nil :foreground "#00cc66")
