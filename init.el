@@ -8,8 +8,8 @@
 
 (defvar my-package-list
   '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
-    markdown-mode multi-term neotree simple-httpd undo-tree volatile-highlights
-    web-mode yaml-mode)
+    markdown-mode multi-term multi-web-mode neotree simple-httpd undo-tree
+    volatile-highlights web-mode yaml-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
@@ -22,6 +22,7 @@
         (json-mode . "melpa")
         (markdown-mode . "melpa")
         (multi-term . "melpa")
+        (multi-web-mode . "melpa")
         (neotree . "melpa")
         (simple-httpd . "melpa")
         (undo-tree . "gnu")
@@ -146,40 +147,47 @@
 ;;;;; HTML, CSS
 ;; M-x package-list-packages
 ;; package-install
-;; web-mode
+;; multi-web-mode
 ;; If need to support template, M-x -> web-mode-set-engine -> jinja2
-(load "web-mode")
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(require 'multi-web-mode)
+(require 'web-mode)
+(setq mweb-default-major-mode 'web-mode)
+(setq mweb-tags
+  '((web-mode "<script[^>]*" "</script>")
+    (css-mode "<style[^>]*" "</style>")))
+(setq mweb-filename-extensions '("htm" "html"))
+(multi-web-global-mode 1)
 
-(defun my-web-mode-hook ()
-  "Hooks for web mode."
+(defun my-multi-web-mode-hook ()
+  "Hooks for multi web mode."
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-paring t)
   (setq web-mode-enable-auto-closing t)
-  ;(setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-script-padding 2)
+  (setq web-mode-style-padding 2)
+  (setq web-mode-block-padding 2)
   (when '("\\.html?") (web-mode-set-engine "jinja2"))
   (set-face-attribute 'web-mode-comment-face nil :foreground "#6d6d6d")
   (set-face-attribute 'web-mode-doctype-face nil :foreground "Blue")
   (set-face-attribute 'web-mode-html-tag-face nil :foreground "#00cc66")
   (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "#66cc00")
-  ;(set-face-attribute 'web-mode-html-attr-name-face nil :foreground "#5d5d5d")
+  (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "#bdbdbd")
 )
-(add-hook 'web-mode-hook 'my-web-mode-hook)
+(add-hook 'multi-web-mode-hook 'my-multi-web-mode-hook)
 
 ;;;;; JavaScript
-(load "js2-mode")
-(add-to-list 'auto-mode-alist '("\\.js?\\'" . js2-mode))
-(setq js2-basic-offset 2)
+(setq js-indent-level 2)
 
 ;;;;; Json
-(load "json-mode")
+(require 'json-mode)
 (add-to-list 'auto-mode-alist '("\\.json?\\'" . json-mode))
 
 ;;;;; Yaml
-(load "yaml-mode")
+(require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yaml?\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yml?\\'" . yaml-mode))
 
@@ -209,6 +217,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(httpd-root "~/Work/genki/app")
  '(package-selected-packages
    (quote
     (js2-mode yaml-mode web-mode json-mode dockerfile-mode))))
