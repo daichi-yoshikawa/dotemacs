@@ -9,7 +9,7 @@
 (defvar my-package-list
   '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
     markdown-mode multi-term multi-web-mode neotree simple-httpd undo-tree
-    volatile-highlights web-mode yaml-mode)
+    volatile-highlights vue-html-mode vue-mode web-mode yaml-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
@@ -27,6 +27,8 @@
         (simple-httpd . "melpa")
         (undo-tree . "gnu")
         (volatile-highlights . "melpa")
+        (vue-html-mode . "melpa")
+        (vue-mode . "melpa")
         (web-mode . "melpa")
         (yaml-mode . "melpa")))
 
@@ -88,6 +90,7 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
+(setq c-basic-offset 2)
 (load "whitespace")
 (global-whitespace-mode t)
 (setq whitespace-style '(tab-mark))
@@ -104,6 +107,10 @@
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-show-hidden-files t)
 (setq neo-smart-open t)
+
+;;;;; Python
+(setq-default python-indent 2)
+(setq-default python-indent-offset 2)
 
 ;;;;; C, C++
 (add-to-list 'auto-mode-alist '("\\.cu?\\'" . c++-mode))
@@ -154,8 +161,8 @@
 (setq mweb-default-major-mode 'web-mode)
 (setq mweb-tags
   '((web-mode "<script[^>]*" "</script>")
-    (css-mode "<style[^>]*" "</style>")))
-(setq mweb-filename-extensions '("htm" "html"))
+    (web-mode "<style[^>]*" "</style>")))
+(setq mweb-filename-extensions '("htm" "html" "vue"))
 (multi-web-global-mode 1)
 
 (defun my-multi-web-mode-hook ()
@@ -170,6 +177,7 @@
   (setq web-mode-script-padding 2)
   (setq web-mode-style-padding 2)
   (setq web-mode-block-padding 2)
+  (setq css-indent-level 2)
   (when '("\\.html?") (web-mode-set-engine "jinja2"))
   (set-face-attribute 'web-mode-comment-face nil :foreground "#6d6d6d")
   (set-face-attribute 'web-mode-doctype-face nil :foreground "Blue")
