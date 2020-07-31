@@ -1,7 +1,1 @@
-*
-
-!.gitignore
-!init.el
-!elisp
-elisp/*
-!elisp/*.el
+auto-save-list/
