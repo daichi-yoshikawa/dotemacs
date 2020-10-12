@@ -71,6 +71,9 @@
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
 
+(global-unset-key (kbd "C-z")) ; disable suspend button
+(global-unset-key (kbd "C-x C-z")) ; disable suspend button
+
 ;;;;; Auto-completion
 (require 'company)
 (global-company-mode)
