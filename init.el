@@ -4,7 +4,7 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
-(add-to-list 'load-path "~/.emacs.d/elisp/")
+(add-to-list 'load-path "~/.emacs.d/elipsp/")
 
 (defvar my-package-list
   '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
@@ -50,8 +50,9 @@
 (column-number-mode t)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
+(setq create-lockfiles nil)
 (setq make-backup-files nil)
-(setq auto-save-default nil) 
+(setq auto-save-default nil)
 (setq history-length 1024)
 (set-locale-environment nil) ;Don't use location-dependent setting
 
@@ -125,7 +126,7 @@
     (setq c-tab-always-indent t)
     (setq tab-width 2)
     (setq indent-tabs-mode nil) ; Use space for indent, not tab
-    (c-set-offset 'innamespace 0)
+    (c-set-offset 'innamespace 2) ; Indent namespaces
     (c-set-offset 'arglist-close 0)
     (define-key c-mode-base-map "\C-m" 'newline-and-indent)
   )
