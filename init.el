@@ -74,6 +74,7 @@
 
 (global-unset-key (kbd "C-z")) ; disable suspend button
 (global-unset-key (kbd "C-x C-z")) ; disable suspend button
+(global-unset-key (kbd "C-[")) ; disable close split window
 
 ;;;;; Auto-completion
 (require 'company)
