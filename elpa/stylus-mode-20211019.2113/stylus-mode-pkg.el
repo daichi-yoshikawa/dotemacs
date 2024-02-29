@@ -1,0 +1,2 @@
+;;; Generated package description from stylus-mode.el  -*- no-byte-compile: t -*-
+(define-package "stylus-mode" "20211019.2113" "Major mode for editing .styl files" 'nil :commit "1ad7c51f3c6a6ae64550d9510c5e4e8470014375" :authors '(("Brian M. Carlson and other contributors")) :maintainer '("Brian M. Carlson and other contributors") :keywords '("languages") :url "https://github.com/brianc/jade-mode")

@@ -1,15 +1,32 @@
 ;;;;; Install packages
-(package-initialize)
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
-(add-to-list 'load-path "~/.emacs.d/elipsp/")
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
+(package-initialize)
+(add-to-list 'load-path "~/.emacs.d/elpa/")
 
 (defvar my-package-list
-  '(anzu company cmake-mode dockerfile-mode ini-mode js2-mode json-mode
-    markdown-mode multi-term multi-web-mode neotree simple-httpd undo-tree
-    volatile-highlights vue-html-mode vue-mode web-mode yaml-mode)
+  '(anzu
+    company
+    cmake-mode
+    dockerfile-mode
+    ini-mode
+    js2-mode
+    json-mode
+    markdown-mode
+    multi-term
+    multi-web-mode
+    neotree
+    simple-httpd
+    tide
+    typescript-mode
+    undo-tree
+    volatile-highlights
+    vue-html-mode
+    vue-mode
+    web-mode
+    yaml-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
@@ -25,6 +42,8 @@
         (multi-web-mode . "melpa")
         (neotree . "melpa")
         (simple-httpd . "melpa")
+        (tide . "melpa")
+        (typescript-mode . "melpa")
         (undo-tree . "gnu")
         (volatile-highlights . "melpa")
         (vue-html-mode . "melpa")
@@ -64,6 +83,20 @@
 (define-key global-map (kbd "C-t") 'other-window-or-split)
 (define-key global-map (kbd "C-i") 'scroll-down-command)
 
+;;;;; Disable C-[ to close split window without disabling M-x.
+(defun my-keyboard-escape-quit ()
+  "An alternative to `keyboard-escape-quit' that doesn't close windows."
+  (interactive)
+  (let (orig-buf (current-buffer))
+    (dolist (buf (buffer-list))
+      (set-buffer buf)
+      (if (and buffer-file-name (buffer-modified-p))
+          (message "Modified file: %s" (buffer-file-name))
+        (when (and (get-buffer-process buf) (not (eq buf orig-buf)))
+          (set-process-query-on-exit-flag (get-buffer-process buf) nil)
+          (kill-buffer buf))))))
+(global-set-key (kbd "ESC ESC ESC") 'my-keyboard-escape-quit)
+
 (require 'anzu)
 (global-anzu-mode t)
 (require 'undo-tree)
@@ -74,7 +107,6 @@
 
 (global-unset-key (kbd "C-z")) ; disable suspend button
 (global-unset-key (kbd "C-x C-z")) ; disable suspend button
-(global-unset-key (kbd "C-[")) ; disable close split window
 
 ;;;;; Auto-completion
 (require 'company)
@@ -90,6 +122,8 @@
 (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
 (define-key company-active-map (kbd "C-M-i") 'company-complete-selection)
 (define-key company-active-map [tab] 'company-complete-selection)
+(define-key key-translation-map (kbd "C-]") (kbd "<escape>"))
+(define-key key-translation-map (kbd "C-[") nil)
 
 ;;;;; Tab and whitespace
 (setq-default indent-tabs-mode nil)
@@ -231,12 +265,45 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(httpd-root "~/Work/genki/app")
- '(package-selected-packages
-   (quote
-    (js2-mode yaml-mode web-mode json-mode dockerfile-mode))))
+ '(package-selected-packages '(js2-mode yaml-mode web-mode json-mode dockerfile-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;;;; Vue.js
+(require 'vue-mode)
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+(require 'stylus-mode)
+(add-to-list 'vue-mode-hook
+             (lambda ()
+               (when (equal major-mode 'vue-mode)
+                 (let ((tag (plist-get (text-properties-at (point)) 'tag-beg)))
+                   (when (and tag (string= tag "style"))
+                     (stylus-mode))))))
+
+;;;;; Typescript
+(require 'typescript-mode)
+(add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; configure javascript-tide checker to run after your default javascript checker
+  (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
