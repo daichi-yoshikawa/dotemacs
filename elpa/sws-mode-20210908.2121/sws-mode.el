@@ -3,9 +3,8 @@
 ;; Copyright 2011-2021  Brian Carlson
 
 ;; Author: Brian M. Carlson and other contributors
-;; Version: 1.0.1
 ;; Package-Version: 20210908.2121
-;; Package-Commit: 111460b056838854e470a6383041a99f843b93ee
+;; Package-Revision: 111460b05683
 ;; Keywords: languages
 ;; URL: https://github.com/brianc/jade-mode
 

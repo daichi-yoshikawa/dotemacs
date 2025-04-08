@@ -1,10 +1,9 @@
 ;;;;; Install packages
 (setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")))
+  '(("gnu" . "https://elpa.gnu.org/packages/")
+    ("melpa" . "https://melpa.org/packages/")
+    ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
-(add-to-list 'load-path "~/.emacs.d/elpa/")
 
 (defvar my-package-list
   '(anzu
@@ -12,18 +11,18 @@
     cmake-mode
     dockerfile-mode
     ini-mode
+    flycheck
     js2-mode
     json-mode
     markdown-mode
     multi-term
-    multi-web-mode
     neotree
     simple-httpd
+    stylus-mode
+    sws-mode
     tide
     typescript-mode
-    undo-tree
     volatile-highlights
-    vue-html-mode
     vue-mode
     web-mode
     yaml-mode)
@@ -34,19 +33,19 @@
         (company . "melpa")
         (cmake-mode . "melpa")
         (dockerfile-mode . "melpa")
+        (flycheck . "melpa")
         (ini-mode . "melpa")
         (js2-mode . "melpa")
         (json-mode . "melpa")
         (markdown-mode . "melpa")
         (multi-term . "melpa")
-        (multi-web-mode . "melpa")
         (neotree . "melpa")
         (simple-httpd . "melpa")
+        (stylus-mode . "melpa")
+        (sws-mode . "melpa")
         (tide . "melpa")
         (typescript-mode . "melpa")
-        (undo-tree . "gnu")
         (volatile-highlights . "melpa")
-        (vue-html-mode . "melpa")
         (vue-mode . "melpa")
         (web-mode . "melpa")
         (yaml-mode . "melpa")))
@@ -95,13 +94,10 @@
         (when (and (get-buffer-process buf) (not (eq buf orig-buf)))
           (set-process-query-on-exit-flag (get-buffer-process buf) nil)
           (kill-buffer buf))))))
-(global-set-key (kbd "ESC ESC ESC") 'my-keyboard-escape-quit)
 
 (require 'anzu)
 (global-anzu-mode t)
-(require 'undo-tree)
-(global-undo-tree-mode t)
-(global-set-key (kbd "M-/") 'undo-tree-redo)
+
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
 
@@ -195,36 +191,37 @@
 ;; package-install
 ;; multi-web-mode
 ;; If need to support template, M-x -> web-mode-set-engine -> jinja2
-(require 'multi-web-mode)
+;; web-modeの読み込みとファイル関連付け
 (require 'web-mode)
-(setq mweb-default-major-mode 'web-mode)
-(setq mweb-tags
-  '((web-mode "<script[^>]*" "</script>")
-    (web-mode "<style[^>]*" "</style>")))
-(setq mweb-filename-extensions '("htm" "html" "vue"))
-(multi-web-global-mode 1)
 
-(defun my-multi-web-mode-hook ()
-  "Hooks for multi web mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-auto-paring t)
-  (setq web-mode-enable-auto-closing t)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-style-padding 2)
-  (setq web-mode-block-padding 2)
-  (setq css-indent-level 2)
-  (when '("\\.html?") (web-mode-set-engine "jinja2"))
-  (set-face-attribute 'web-mode-comment-face nil :foreground "#6d6d6d")
-  (set-face-attribute 'web-mode-doctype-face nil :foreground "Blue")
-  (set-face-attribute 'web-mode-html-tag-face nil :foreground "#00cc66")
-  (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "#66cc00")
-  (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "#bdbdbd")
-)
-(add-hook 'multi-web-mode-hook 'my-multi-web-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+(add-hook 'web-mode-hook
+  (lambda ()
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-script-padding 2)
+    (setq web-mode-style-padding 2)
+    (setq web-mode-block-padding 2)
+    (setq css-indent-level 2)
+
+    (setq web-mode-enable-current-element-highlight t)
+    (setq web-mode-enable-auto-pairing t)
+    (setq web-mode-enable-auto-closing t)
+    (setq web-mode-enable-css-colorization t)
+
+    (set-face-attribute 'web-mode-comment-face nil
+                        :foreground "#6d6d6d")
+    (set-face-attribute 'web-mode-doctype-face nil
+                        :foreground "Blue")
+    (set-face-attribute 'web-mode-html-tag-face nil
+                        :foreground "#00cc66")
+    (set-face-attribute 'web-mode-html-attr-value-face nil
+                        :foreground "#66cc00")
+    (set-face-attribute 'web-mode-html-attr-name-face nil
+                        :foreground "#bdbdbd")
+  ))
 
 ;;;;; JavaScript
 (setq js-indent-level 2)
@@ -239,17 +236,24 @@
 (add-to-list 'auto-mode-alist '("\\.yml?\\'" . yaml-mode))
 
 ;;;;; INI
-(load "ini-mode")
+(require 'ini-mode)
 (add-to-list 'auto-mode-alist '("\\.ini?\\'" . ini-mode))
 (add-to-list 'auto-mode-alist '("\\.in?\\'" . ini-mode))
 
 ;;;;; Dockerfile
-(load "dockerfile-mode")
+(require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))
 
 ;;;;; Terminal
 (require 'multi-term)
 (setq multi-term-program "/bin/bash")
+
+(add-hook 'term-mode-hook
+  (lambda ()
+    (term-set-escape-char ?\C-t)
+    (define-key term-raw-map "\C-t" 'next-multiframe-window)
+    (define-key term-raw-map "\M-y" 'yank-pop)
+    (define-key term-raw-map "\M-w" 'kill-ring-save)))
 
 (add-hook 'term-mode-hook
   (lambda ()
@@ -265,7 +269,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(httpd-root "~/Work/genki/app")
- '(package-selected-packages '(js2-mode yaml-mode web-mode json-mode dockerfile-mode)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -279,11 +283,11 @@
 
 (require 'stylus-mode)
 (add-to-list 'vue-mode-hook
-             (lambda ()
-               (when (equal major-mode 'vue-mode)
-                 (let ((tag (plist-get (text-properties-at (point)) 'tag-beg)))
-                   (when (and tag (string= tag "style"))
-                     (stylus-mode))))))
+  (lambda ()
+    (when (equal major-mode 'vue-mode)
+      (let ((tag (plist-get (text-properties-at (point)) 'tag-beg)))
+        (when (and tag (string= tag "style"))
+          (stylus-mode))))))
 
 ;;;;; Typescript
 (require 'typescript-mode)
