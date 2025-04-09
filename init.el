@@ -22,6 +22,7 @@
     sws-mode
     tide
     typescript-mode
+    undo-fu
     volatile-highlights
     vue-mode
     web-mode
@@ -45,6 +46,7 @@
         (sws-mode . "melpa")
         (tide . "melpa")
         (typescript-mode . "melpa")
+        (undo-fu . "melpa")
         (volatile-highlights . "melpa")
         (vue-mode . "melpa")
         (web-mode . "melpa")
@@ -82,6 +84,15 @@
 (define-key global-map (kbd "C-t") 'other-window-or-split)
 (define-key global-map (kbd "C-i") 'scroll-down-command)
 
+;;;;; Undo, redo
+(require 'undo-fu)
+
+(global-unset-key (kbd "C-z")) ; disable suspend button
+(global-unset-key (kbd "C-x C-z")) ; disable suspend button
+
+(global-set-key (kbd "C-z") 'undo-fu-only-undo)
+(global-set-key (kbd "C-/") 'undo-fu-only-redo)
+
 ;;;;; Disable C-[ to close split window without disabling M-x.
 (defun my-keyboard-escape-quit ()
   "An alternative to `keyboard-escape-quit' that doesn't close windows."
@@ -100,9 +111,6 @@
 
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
-
-(global-unset-key (kbd "C-z")) ; disable suspend button
-(global-unset-key (kbd "C-x C-z")) ; disable suspend button
 
 ;;;;; Auto-completion
 (require 'company)
