@@ -6,51 +6,51 @@
 (package-initialize)
 
 (defvar my-package-list
-  '(anzu
-    company
-    cmake-mode
-    dockerfile-mode
-    ini-mode
-    flycheck
-    js2-mode
-    json-mode
-    markdown-mode
-    multi-term
-    neotree
-    simple-httpd
-    stylus-mode
-    sws-mode
-    tide
-    typescript-mode
-    undo-fu
-    volatile-highlights
-    vue-mode
-    web-mode
-    yaml-mode)
+  '(
+     anzu
+     company
+     cmake-mode
+     dockerfile-mode
+     ini-mode
+     flycheck
+     js2-mode
+     json-mode
+     markdown-mode
+     multi-term
+     neotree
+     simple-httpd
+     stylus-mode
+     sws-mode
+     tide
+     typescript-mode
+     undo-fu
+     volatile-highlights
+     web-mode
+     yaml-mode)
   "packages to be installed")
 (require 'package)
 (setq package-pinned-packages
-      '((anzu . "melpa")
-        (company . "melpa")
-        (cmake-mode . "melpa")
-        (dockerfile-mode . "melpa")
-        (flycheck . "melpa")
-        (ini-mode . "melpa")
-        (js2-mode . "melpa")
-        (json-mode . "melpa")
-        (markdown-mode . "melpa")
-        (multi-term . "melpa")
-        (neotree . "melpa")
-        (simple-httpd . "melpa")
-        (stylus-mode . "melpa")
-        (sws-mode . "melpa")
-        (tide . "melpa")
-        (typescript-mode . "melpa")
-        (undo-fu . "melpa")
-        (volatile-highlights . "melpa")
-        (vue-mode . "melpa")
-        (web-mode . "melpa")
-        (yaml-mode . "melpa")))
+  '(
+     (anzu . "melpa")
+     (company . "melpa")
+     (cmake-mode . "melpa")
+     (dockerfile-mode . "melpa")
+     (flycheck . "melpa")
+     (ini-mode . "melpa")
+     (js2-mode . "melpa")
+     (json-mode . "melpa")
+     (markdown-mode . "melpa")
+     (multi-term . "melpa")
+     (neotree . "melpa")
+     (simple-httpd . "melpa")
+     (stylus-mode . "melpa")
+     (sws-mode . "melpa")
+     (tide . "melpa")
+     (typescript-mode . "melpa")
+     (undo-fu . "melpa")
+     (volatile-highlights . "melpa")
+     (web-mode . "melpa")
+     (yaml-mode . "melpa")))
 
 (let ((package-refreshed nil))
   (dolist (pkg my-package-list)
@@ -201,35 +201,35 @@
 ;; If need to support template, M-x -> web-mode-set-engine -> jinja2
 ;; web-modeの読み込みとファイル関連付け
 (require 'web-mode)
-
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
-(add-hook 'web-mode-hook
-  (lambda ()
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-script-padding 2)
-    (setq web-mode-style-padding 2)
-    (setq web-mode-block-padding 2)
-    (setq css-indent-level 2)
+(setq web-mode-enable-engine-detection t)
 
-    (setq web-mode-enable-current-element-highlight t)
-    (setq web-mode-enable-auto-pairing t)
-    (setq web-mode-enable-auto-closing t)
-    (setq web-mode-enable-css-colorization t)
+(setq web-mode-content-types-alist '(("vue" . "\\.vue\\'")))
 
-    (set-face-attribute 'web-mode-comment-face nil
-                        :foreground "#6d6d6d")
-    (set-face-attribute 'web-mode-doctype-face nil
-                        :foreground "Blue")
-    (set-face-attribute 'web-mode-html-tag-face nil
-                        :foreground "#00cc66")
-    (set-face-attribute 'web-mode-html-attr-value-face nil
-                        :foreground "#66cc00")
-    (set-face-attribute 'web-mode-html-attr-name-face nil
-                        :foreground "#bdbdbd")
-  ))
+(defun my-web-mode-hook ()
+  "Personal `web-mode' customizations for HTML, Vue, etc."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-script-padding 2)
+  (setq web-mode-style-padding 2)
+  (setq web-mode-block-padding 2)
+  (setq css-indent-level 2)
+  ;; Syntax highlighting toggles
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-css-colorization t)
+  ;; Face tweaks
+  (set-face-attribute 'web-mode-comment-face nil :foreground "#6d6d6d")
+  (set-face-attribute 'web-mode-doctype-face nil :foreground "Blue")
+  (set-face-attribute 'web-mode-html-tag-face nil :foreground "#00cc66")
+  (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "#66cc00")
+  (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "#bdbdbd"))
+
+(add-hook 'web-mode-hook #'my-web-mode-hook)
 
 ;;;;; JavaScript
 (setq js-indent-level 2)
@@ -285,18 +285,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;;;; Vue.js
-(require 'vue-mode)
-(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-
-(require 'stylus-mode)
-(add-to-list 'vue-mode-hook
-  (lambda ()
-    (when (equal major-mode 'vue-mode)
-      (let ((tag (plist-get (text-properties-at (point)) 'tag-beg)))
-        (when (and tag (string= tag "style"))
-          (stylus-mode))))))
-
 ;;;;; Typescript
 (require 'typescript-mode)
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
@@ -319,3 +307,9 @@
 (add-hook 'before-save-hook 'tide-format-before-save)
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+(add-hook 'emacs-lisp-mode-hook
+  (lambda ()
+    (setq lisp-indent-offset 2)
+    (setq tab-width 2)
+    (setq indent-tabs-mode nil)))
