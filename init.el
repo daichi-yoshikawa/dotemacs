@@ -203,23 +203,25 @@
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-
-(setq web-mode-enable-engine-detection t)
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
 
 (setq web-mode-content-types-alist '(("vue" . "\\.vue\\'")))
+(setq web-mode-content-types-alist '(("typescript" . "\\.ts\\'")))
+
+(setq web-mode-enable-engine-detection t)
 
 (defun my-web-mode-hook ()
   "Personal `web-mode' customizations for HTML, Vue, etc."
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-style-padding 2)
+  (setq web-mode-script-padding 0)
+  (setq web-mode-style-padding 0)
   (setq web-mode-block-padding 2)
   (setq css-indent-level 2)
   ;; Syntax highlighting toggles
   (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-pairing nil)
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-css-colorization t)
   ;; Face tweaks
@@ -230,6 +232,25 @@
   (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "#bdbdbd"))
 
 (add-hook 'web-mode-hook #'my-web-mode-hook)
+
+; (defun setup-tide-mode ()
+;   (interactive)
+;   (tide-setup)
+;   (flycheck-mode +1)
+;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+;   (eldoc-mode +1)
+;   (tide-hl-identifier-mode +1)
+;   ;; configure javascript-tide checker to run after your default javascript checker
+;   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
+;   (company-mode +1))
+;
+; (defun my-web-mode-ts-setup ()
+;   ;; Only run `setup-tide-mode` in .ts buffers
+;   (when (and buffer-file-name
+;              (string-equal "ts" (file-name-extension buffer-file-name)))
+;     (setup-tide-mode)))
+;
+; (add-hook 'web-mode-hook #'my-web-mode-ts-setup)
 
 ;;;;; JavaScript
 (setq js-indent-level 2)
@@ -286,28 +307,29 @@
  )
 
 ;;;;; Typescript
-(require 'typescript-mode)
-(add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
+; (require 'typescript-mode)
+; (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
 
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  ;; configure javascript-tide checker to run after your default javascript checker
-  (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
-  (company-mode +1))
+; (defun setup-tide-mode ()
+;   (interactive)
+;   (tide-setup)
+;   (flycheck-mode +1)
+;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+;   (eldoc-mode +1)
+;   (tide-hl-identifier-mode +1)
+;   ;; configure javascript-tide checker to run after your default javascript checker
+;   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
+;   (company-mode +1))
 
 ;; aligns annotation to the right hand side
 (setq company-tooltip-align-annotations t)
 
 ;; formats the buffer before saving
-(add-hook 'before-save-hook 'tide-format-before-save)
+; (add-hook 'before-save-hook 'tide-format-before-save)
 
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
+; (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
+;; Emacs lisp
 (add-hook 'emacs-lisp-mode-hook
   (lambda ()
     (setq lisp-indent-offset 2)
