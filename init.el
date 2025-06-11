@@ -84,6 +84,20 @@
 (define-key global-map (kbd "C-t") 'other-window-or-split)
 (define-key global-map (kbd "C-i") 'scroll-down-command)
 
+;;;;; Disable viewing help file
+(global-unset-key (kbd "C-h n")) ; NEWS
+(global-unset-key (kbd "C-h C-n")) ; NEWS
+(global-unset-key (kbd "C-h C-d")) ; How to debug/bug-report Emacs itself
+(global-unset-key (kbd "C-h C-c")) ; GPL copying conditions
+(global-unset-key (kbd "C-h C-e")) ; Where to get third party packages
+(global-unset-key (kbd "C-h C-f")) ; FAQ
+(global-unset-key (kbd "C-h g")) ; GNU Project
+(global-unset-key (kbd "C-h C-o")) ; How to download/get Emacs
+(global-unset-key (kbd "C-h C-p")) ; Known issues/work-arounds
+(global-unset-key (kbd "C-h C-t")) ; Emacs maintainers' to-do list
+(global-unset-key (kbd "C-h C-w")) ; Emacs "no warranty" notice
+(global-unset-key (kbd "C-h h")) ; HELLO file.
+
 ;;;;; Undo, redo
 (require 'undo-fu)
 
@@ -205,10 +219,17 @@
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
 
-(setq web-mode-content-types-alist '(("vue" . "\\.vue\\'")))
-(setq web-mode-content-types-alist '(("typescript" . "\\.ts\\'")))
+(setq web-mode-content-types-alist
+  '(("vue" . "\\.vue\\'")
+    ("typescript" . "\\.ts\\'")))
 
 (setq web-mode-enable-engine-detection t)
+
+(setq web-mode-indentation-params
+  '(("lineup-args" . nil)
+    ("lineup-calls" . nil)
+    ("lineup-concats" . nil)
+    ("lineup-ternary" . nil)))
 
 (defun my-web-mode-hook ()
   "Personal `web-mode' customizations for HTML, Vue, etc."
