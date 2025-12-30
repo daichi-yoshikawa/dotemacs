@@ -84,6 +84,12 @@
 (define-key global-map (kbd "C-t") 'other-window-or-split)
 (define-key global-map (kbd "C-i") 'scroll-down-command)
 
+;; Leave copy/paste & modifyOtherKeys active, but skip reportBackground
+; (setq xterm-extra-capabilities
+;  '(modifyOtherKeys getSelection setSelection))
+
+(setq xterm-osc-52-max-size 10000)
+
 ;;;;; Disable viewing help file
 (global-unset-key (kbd "C-h n")) ; NEWS
 (global-unset-key (kbd "C-h C-n")) ; NEWS
@@ -97,6 +103,8 @@
 (global-unset-key (kbd "C-h C-t")) ; Emacs maintainers' to-do list
 (global-unset-key (kbd "C-h C-w")) ; Emacs "no warranty" notice
 (global-unset-key (kbd "C-h h")) ; HELLO file.
+(global-unset-key (kbd "C-h C-a")) ; About GNU Emacs
+(global-unset-key (kbd "<f1> a")) ; About GNU Emacs
 
 ;;;;; Undo, redo
 (require 'undo-fu)
