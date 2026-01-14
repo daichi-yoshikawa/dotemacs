@@ -1,4 +1,15 @@
-*~
-.*
 elpa/
 auto-save-list/
+
+*.elc
+*.eln
+
+*~
+\#*\#
+.#*
+
+.lsp-session-v1
+.ccls-cache/
+.cache/
+
+undo-fu-session/
